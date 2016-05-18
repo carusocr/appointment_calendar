@@ -1,0 +1,63 @@
+!!! 5
+%html
+  %head
+  %meta{charset: "utf-8"}
+  %link{rel: "stylesheet", href: "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"}
+  %link{rel: "stylesheet", href: "//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css"}
+  %link{:rel=>"stylesheet", :href=>"/fullcalendar.css"}
+  %link{:rel=>"stylesheet", :href=>"/jquery.timepicker.css"}
+  %script{type: "text/javascript", src: "http://fullcalendar.io/js/fullcalendar-2.7.1/lib/moment.min.js" }
+  %script{type: "text/javascript", src: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" }
+  %script{:type => "text/javascript", :src => "http://fullcalendar.io/js/fullcalendar-2.7.1/lib/jquery.min.js"}
+  %script{:type => "text/javascript", :src => "https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"}
+  %script{type: "text/javascript", src: "http://fullcalendar.io/js/fullcalendar-2.7.1/fullcalendar.min.js"}
+  %script{type: "text/javascript", src: "/jquery.timepicker.min.js"}
+  :javascript
+    $(document).ready(function() {
+      var appointments = #{$appointment_events.to_json};
+      var appt_events = new Array();
+      for (i = 0; i < appointments.length; i++) {
+        appt_events.push(appointments[i]);
+      }
+      $("#calendar").fullCalendar({
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,basicWeek,basicDay'
+        },
+        editable: false, 
+        eventLimit: true,
+        events: appt_events,
+        eventClick: function(event, jsEvent, view) {
+          if(event.editable == "true") {
+            if (!confirm("Delete?")){
+              return;
+            }
+            //change to update popup
+            $('#calendar').fullCalendar('removeEvents', event._id);
+          }
+        },
+        dayClick: function(date, allDay, jsEvent, view) {
+          $('#make_event').dialog();
+        }
+      });
+      var newEvent = new Object();
+      newEvent.title = appt_array_a.title;
+      newEvent.start = appt_array_a.start;
+      newEvent.allDay = false;
+      $('#calendar').fullCalendar('renderEvent', newEvent);
+      $('#new_appt').click(function() {
+
+      })
+    });
+
+    
+  %body
+    %div.container
+      %h2
+        = "Your coach is #{$user_coach}" 
+      %button#new_appt    
+        Create New Appointment
+      %div#calendar{style: "max-width: 800px; margin: 0 auto; font-size: 12px; margin: 20px 10px;"}
+      #eventDetails{:style => "display:none;", :title => "Event Details"}
+        test

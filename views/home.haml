@@ -1,0 +1,19 @@
+%html
+  %head
+    %link{rel: "stylesheet", href: "//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"}
+    %link{rel: "stylesheet", href: "signin.css"}
+    %meta{charset: "utf8"}
+    %body
+      %div.container
+        %form.form-signin{action: "login", method: "post"}
+          %h3.form-signin-heading Sign In
+          %input.form-control{name: "email", id: "email", placeholder: "Email"}
+          %br
+          %input.form-control{name: "password", type: "password", id: "pwd", placeholder: "Password"}
+          %br
+          %div.actions
+            %a{href: "/resetpass"}Forgot Password?
+            %button.btn.btn-primary.pull-right{type: "submit", value: "Login", id: "login"}Login
+            - if flash[:error]
+              %p
+                = flash[:error]
