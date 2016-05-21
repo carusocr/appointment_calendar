@@ -29,16 +29,54 @@
         eventLimit: true,
         events: appt_events,
         eventClick: function(event, jsEvent, view) {
-          if(event.editable == "true") {
-            if (!confirm("Delete?")){
-              return;
+            $("#startTime").html(moment(event.start).format('MMM Do h:mm A'));
+            $("#endTime").html(moment(event.end).format('MMM Do h:mm A'));
+            $("#eventInfo").html(event.description);
+
+            $("#eventDetails").dialog({ 
+              modal: true, 
+              title: event.title,
+              width:350,
+              buttons:
+                [
+                  {
+                    id: "cancel",
+                    text: "Cancel",
+                    click: function() {
+                    //***add cancel function here, calling event?
+                      alert("ZUG"...);
+                    }
+                  }
+                ]
+            });
+            if(event.editable != "true") {
+              $("#changeEvent").css("display","none");
+              $("#cancelEvent").css("display","none");
+              $('#divName').siblings('.ui-dialog-buttonpane').find('button').eq(2).hide();
+              //$('.ui-dialog-buttonpane button:contains("cancel")').button().hide();
+              //testing disable + update
+              var dialogButtons = $( "" ).dialog("option", "buttons");
+              $.each(buttons, function (buttonIndex, button) {
+                if (button.id === "cancel") {
+                  button.disabled = true;
+                }
+              })
+              $('#eventDetails').dialog("option", "buttons", dialogButtons);
             }
+            else {
+              $("#changeEvent").css("display","initial");
+              $("#cancelEvent").css("display","initial");
+            }
+          //if(event.editable == "true") {
+          //  if (!confirm("Delete?")){
+          //    return;
+          //  }
             //change to update popup
-            $('#calendar').fullCalendar('removeEvents', event._id);
-          }
+          //  $('#calendar').fullCalendar('removeEvents', event._id);
+          //}
         },
-        dayClick: function(date, allDay, jsEvent, view) {
-          $('#make_event').dialog();
+        dayClick: function(event, allDay, jsEvent, view) {
+          //$("#eventDetails").dialog({modal: true, title: event.title});
         }
       });
       var newEvent = new Object();
@@ -47,8 +85,11 @@
       newEvent.allDay = false;
       $('#calendar').fullCalendar('renderEvent', newEvent);
       $('#new_appt').click(function() {
-
-      })
+        alert("ZUG");
+      });
+      $("cancelEvent").click(function() {
+        alert('ZUG!');
+      });
     });
 
     
@@ -59,5 +100,16 @@
       %button#new_appt    
         Create New Appointment
       %div#calendar{style: "max-width: 800px; margin: 0 auto; font-size: 12px; margin: 20px 10px;"}
-      #eventDetails{:style => "display:none;", :title => "Event Details"}
-        test
+      #eventDetails{:style => "display:none;"}
+        %br
+        Start:
+        %span#startTime
+        %br
+        End:
+        %span#endTime
+        %p#eventInfo
+        %br
+        %button#changeEvent.btn.btn-primary.btn-sm.pull-right
+          Change
+        %button#cancelEvent.btn.btn-primary.btn-sm.pull-left
+          Cancel!
