@@ -14,6 +14,27 @@
   %script{type: "text/javascript", src: "/jquery.timepicker.min.js"}
   :javascript
     $(document).ready(function() {
+    $('#new_appt').click(function() {
+      $("#eventNew").dialog({ 
+        modal: true, 
+        title: "New Appointment",
+        width:350,
+        buttons:
+          [
+            {
+              id: "cancel",
+              text: "Cancel",
+              click: function() {
+              //***add cancel function here, calling event?
+                alert("ZUG...");
+              }
+            }
+          ]
+      });
+    });
+    $("#cancelEvent").click(function() {
+      alert('ZUG!');
+    });
       var appointments = #{$appointment_events.to_json};
       var appt_events = new Array();
       for (i = 0; i < appointments.length; i++) {
@@ -44,7 +65,7 @@
                     text: "Cancel",
                     click: function() {
                     //***add cancel function here, calling event?
-                      alert("ZUG"...);
+                      alert("ZUG...");
                     }
                   }
                 ]
@@ -52,16 +73,6 @@
             if(event.editable != "true") {
               $("#changeEvent").css("display","none");
               $("#cancelEvent").css("display","none");
-              $('#divName').siblings('.ui-dialog-buttonpane').find('button').eq(2).hide();
-              //$('.ui-dialog-buttonpane button:contains("cancel")').button().hide();
-              //testing disable + update
-              var dialogButtons = $( "" ).dialog("option", "buttons");
-              $.each(buttons, function (buttonIndex, button) {
-                if (button.id === "cancel") {
-                  button.disabled = true;
-                }
-              })
-              $('#eventDetails').dialog("option", "buttons", dialogButtons);
             }
             else {
               $("#changeEvent").css("display","initial");
@@ -84,12 +95,7 @@
       newEvent.start = appt_array_a.start;
       newEvent.allDay = false;
       $('#calendar').fullCalendar('renderEvent', newEvent);
-      $('#new_appt').click(function() {
-        alert("ZUG");
-      });
-      $("cancelEvent").click(function() {
-        alert('ZUG!');
-      });
+      
     });
 
     
@@ -97,9 +103,13 @@
     %div.container
       %h2
         = "Your coach is #{$user_coach}" 
-      %button#new_appt    
+      %button#new_appt.btn.btn-primary.pull-left   
         Create New Appointment
+      %br
       %div#calendar{style: "max-width: 800px; margin: 0 auto; font-size: 12px; margin: 20px 10px;"}
+      #eventNew{style: "display:none;"}
+        %form{:action => "/resetpass", :method => "get", :id => "rp"}
+          %input{:type => "submit", :value => "Create Session", :id => "create_appt"}
       #eventDetails{:style => "display:none;"}
         %br
         Start:
